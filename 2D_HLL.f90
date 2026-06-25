@@ -602,26 +602,26 @@ real(8) :: cl, cr
           Ur(IBperp1) = Qr(IBperp1)
           Ur(IBperp2) = Qr(IBperp2)
 
-
+          b1 = 0.5d0*( Ql(IBpara) + Qr(IBpara) )
           
           ! fluxes
           Fl(IDN) = Ul(IVpara)
-          Fl(IVpara) = Ul(IVpara)*Ql(IVpara) + ptotl - QL(IBpara)**2
-          Fl(IVperp1) = Ul(IVperp1)*Ql(IVpara) - QL(IBpara)*Ql(IBperp1)
-          Fl(IVperp2) = Ul(IVperp2)*Ql(IVpara) -QL(IBpara)*Ql(IBpara)*Ql(IBperp2)
-          Fl(IEN) = ( Ul(IEN) + ptotl - QL(IBpara)**2 )*Ql(IVpara) &
-                  - QL(IBpara)*( Ql(IBperp1)*Ql(IVperp1) + Ql(IBperp2)*Ql(IVperp2) )
-          Fl(IBperp1) = Ql(IBperp1)*Ql(IVpara) - QL(IBpara)*Ql(IVperp1)
-          Fl(IBperp2) = Ql(IBperp2)*Ql(IVpara) - QL(IBpara)*Ql(IVperp2)
+          Fl(IVpara) = Ul(IVpara)*Ql(IVpara) + ptotl -b1**2
+          Fl(IVperp1) = Ul(IVperp1)*Ql(IVpara) - b1*Ql(IBperp1)
+          Fl(IVperp2) = Ul(IVperp2)*Ql(IVpara) - b1*Ql(IBperp2)
+          Fl(IEN) = ( Ul(IEN) + ptotl - b1**2 )*Ql(IVpara) &
+                  -b1*( Ql(IBperp1)*Ql(IVperp1) + Ql(IBperp2)*Ql(IVperp2) )
+          Fl(IBperp1) = Ql(IBperp1)*Ql(IVpara) - b1*Ql(IVperp1)
+          Fl(IBperp2) = Ql(IBperp2)*Ql(IVpara) - b1*Ql(IVperp2)
 
           Fr(IDN) = Ur(IVpara)
-          Fr(IVpara) = Ur(IVpara)*Qr(IVpara) + ptotr - QL(IBpara)**2
-          Fr(IVperp1) = Ur(IVperp1)*Qr(IVpara) - QL(IBpara)*Qr(IBperp1)
-          Fr(IVperp2) = Ur(IVperp2)*Qr(IVpara) - QL(IBpara)*Qr(IBperp2)
-          Fr(IEN) = ( Ur(IEN) + ptotr - QL(IBpara)**2 )*Qr(IVpara) &
-                  - QL(IBpara)*( Qr(IBperp1)*Qr(IVperp1) + Qr(IBperp2)*Qr(IVperp2) )
-          Fr(IBperp1) = Qr(IBperp1)*Qr(IVpara) - QL(IBpara)*Qr(IVperp1)
-          Fr(IBperp2) = Qr(IBperp2)*Qr(IVpara) - QL(IBpara)*Qr(IVperp2)
+          Fr(IVpara) = Ur(IVpara)*Qr(IVpara) + ptotr - b1**2
+          Fr(IVperp1) = Ur(IVperp1)*Qr(IVpara) - b1*Qr(IBperp1)
+          Fr(IVperp2) = Ur(IVperp2)*Qr(IVpara) - b1*Qr(IBperp2)
+          Fr(IEN) = ( Ur(IEN) + ptotr - b1**2 )*Qr(IVpara) &
+                  - b1*( Qr(IBperp1)*Qr(IVperp1) + Qr(IBperp2)*Qr(IVperp2) )
+          Fr(IBperp1) = Qr(IBperp1)*Qr(IVpara) - b1*Qr(IVperp1)
+          Fr(IBperp2) = Qr(IBperp2)*Qr(IVpara) - b1*Qr(IVperp2)
 
           al = dsqrt(gam*Ql(IPR)/Ql(IDN))
           ar = dsqrt(gam*Qr(IPR)/Qr(IDN))
