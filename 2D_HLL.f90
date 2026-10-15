@@ -3,7 +3,7 @@ module params
 real(8), parameter :: timemax = 3.5d0 ! simulation end time
 
 ! option
-integer, parameter :: flag_HDC = 1 ! 1 --> HDC on , 0 --> HDC off
+integer, parameter :: flag_HDC = 0 ! 1 --> HDC on , 0 --> HDC off
 integer, parameter :: flag_flux = 1 ! 1 (HLL), 2 (HLLD)
 
 ! coordinate 
@@ -222,7 +222,7 @@ real(8) :: pi, den, B0, rho1, rho2, dv, wid, sig
     dv   = 2.00d0
     wid  = 0.05d0
     sig  = 0.2d0
-    B0  = dsqrt(2.0d0/3.0d0)
+    B0  = 0 !dsqrt(2.0d0/3.0d0)
 
     do j=js,je
     do i=is,ie
