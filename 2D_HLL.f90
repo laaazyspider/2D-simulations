@@ -1,6 +1,6 @@
 module params
 
-real(8), parameter :: timemax = 3.5d0 ! simulation end time
+real(8), parameter :: timemax = 3.0d0 ! simulation end time
 
 ! option
 integer, parameter :: flag_HDC = 0 ! 1 --> HDC on , 0 --> HDC off
@@ -53,7 +53,7 @@ logical, parameter :: flag_binary = .true.
 
 ! realtime analysis 
 integer, parameter :: unitevo =11
-integer, parameter :: nevo = 2
+integer, parameter :: nevo = 3
 
 end module
 
@@ -222,7 +222,7 @@ real(8) :: pi, den, B0, rho1, rho2, dv, wid, sig
     dv   = 2.00d0
     wid  = 0.05d0
     sig  = 0.2d0
-    B0  = 0 !dsqrt(2.0d0/3.0d0)
+    B0 = 0!dsqrt(2.0d0/3.0d0)
 
     do j=js,je
     do i=is,ie
@@ -1115,24 +1115,34 @@ end subroutine makedirs
 subroutine RealtimeAnalysis(xv,yv,Q,phys_evo)
 use params, only : IDN, IVX, IVY, IVZ, IPR, ISC, IBX, IBY, IBZ, &
                    IMX, IMY, IMZ, IEN, IPS, NVAR, nxtot, nytot, &
-                   is, ie, js, je, ny, nx, gam, nevo
+                   is, ie, js, je, ny, nx, gam, nevo,ymax,ymin
 implicit none
 real(8), intent(in)  :: xv(nxtot), yv(nytot), Q(NVAR,nxtot,nytot)
 real(8), intent(out) :: phys_evo(nevo)
 integer::i,j
-real(8) :: tot,dvy,er_divB
+real(8) :: tot,dvy,er_divB,c_avg(nytot),w,dy
 
       dvy = 0.0d0
       er_divB = 0.0d0
       do j=js,je
-      do i=is,ie
+         c_avg(j) = 0.0d0
+         do i=is,ie
            dvy = dvy + Q(IVY,i,j)**2
            er_divB = er_divB + ( Q(IBX,i+1,j) - Q(IBX,i-1,j) + Q(IBY,i,j+1) - Q(IBY,i,j-1) )**2 &
-                       /( Q(IBX,i,j)**2 + Q(IBY,i,j)**2 )
+                      /( Q(IBX,i,j)**2 + Q(IBY,i,j)**2 )
+           c_avg(j) = c_avg(j) + Q(ISC,i,j)
+         enddo
+         c_avg(j)=c_avg(j)/dble(nx) 
       enddo
+      dy = (ymax-ymin)/dble(ny)
+      do j = js, je
+         w = w + c_avg(j)*(1.0d0-c_avg(j))*dy
+
       enddo
+      
       phys_evo(1) = sqrt(dvy/dble(nx*ny))
       phys_evo(2) = sqrt(er_divB/dble(nx*ny))
+      phys_evo(3) = w
       
 return
 end subroutine
